@@ -11,17 +11,23 @@
 void read_command(char *buffer)
 {
     size_t index = 0;
+    char ch;
     while (1)
     {
-        buffer[index] = uart_recv();
-        uart_send(buffer[index]);
-        if (buffer[index] == '\n')
+        ch = uart_recv();
+        // Ignore non-printable characters and ASCII control characters
+        if (ch >= 32 || ch == '\n')
+        {
+            buffer[index++] = ch;
+            uart_send(ch); // Echo back if it's a printable character
+        }
+
+        if (ch == '\n')
         {
             break;
         }
-        index++;
     }
-    buffer[index + 1] = '\0';
+    buffer[index] = '\0'; // Properly terminate the string
 }
 
 void help()

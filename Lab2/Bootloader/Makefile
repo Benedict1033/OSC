@@ -1,11 +1,11 @@
 CFLAGS = -Wall -Wextra -O2 -ffreestanding -nostdinc -nostdlib -nostartfiles
-CFLAGS += -IBoot -IUART/header -IShell/header -IMailbox/header -IUtils/header -IReboot/header
+CFLAGS += -IBoot -IUART/header -IUtils/header -IBootloader/header
 CFLAGS += -I/usr/lib/gcc-cross/aarch64-linux-gnu/11/include -I/usr/lib/gcc-cross/aarch64-linux-gnu/11/include-fixed
 
 K8=kernel8
 LINKER=Boot/linker.ld
-SRC_S=$(wildcard Boot/*.s UART/*.s Shell/*.s Mailbox/*.s Reboot/*.s Utils/*.s)
-SRC_C=$(wildcard UART/*.c Shell/*.c Mailbox/*.c Reboot/*.c Utils/*.c)
+SRC_S=$(wildcard Boot/*.s UART/*.s Shell/*.s Mailbox/*.s Reboot/*.s Utils/*.s Bootloader/*.s)
+SRC_C=$(wildcard UART/*.c Shell/*.c Mailbox/*.c Reboot/*.c Utils/*.c Bootloader/*.c)
 
 OBJS=$(SRC_C:.c=.o) $(SRC_S:.s=.o) main.o
 
@@ -26,12 +26,15 @@ sd: $(K8).img
 	sync
 
 qemu: 
-	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -display none  -kernel kernel8.img
-		
+	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -serial pty -display none  -kernel kernel8.img
+
+dump:
+	@aarch64-linux-gnu-gcc $(CFLAGS) -c $(SRC_S) $(SRC_C)
+	@aarch64-linux-gnu-ld -T $(LINKER) -o $(K8).elf $(OBJS)
+	@aarch64-linux-gnu-objdump -h $(K8).elf
+
 rpi3:
 	screen /dev/ttyUSB0 115200
     
 clean:
 	rm -f $(wildcard */*.o) $(wildcard *.o) $(K8).elf $(K8).img
-
-	
