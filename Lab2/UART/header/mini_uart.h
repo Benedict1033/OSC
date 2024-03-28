@@ -22,3 +22,4 @@ void uart_send(char c);
 char uart_recv();
 char uart_recv_raw();
 void uart_hex(unsigned int d);
+unsigned int uart_printf(char *fmt, ...);

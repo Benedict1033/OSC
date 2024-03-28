@@ -10,7 +10,6 @@ SECTIONS
     
     .data : { *(.data) }
 
-    . = ALIGN(8);
     bss_begin = .;  
     .bss (NOLOAD) : { *(.bss) }
     bss_end = .; 

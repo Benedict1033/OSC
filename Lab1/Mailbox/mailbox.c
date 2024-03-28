@@ -17,7 +17,7 @@ int mailbox_call()
         while (*MAILBOX_STATUS & MAILBOX_EMPTY){}
 
         if (readChannel == *MAILBOX_READ)
-            return mailbox[1] == MAILBOX_RESPONSE;
+            return mailbox[1] == REQUEST_SUCCEED;
     }
 
     return 0;

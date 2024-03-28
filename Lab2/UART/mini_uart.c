@@ -1,6 +1,7 @@
 #include "header/mini_uart.h"
 #include "../header/utils.h"
 
+
 void delay(unsigned int clock)
 {
     while (clock--)
@@ -8,6 +9,7 @@ void delay(unsigned int clock)
         asm volatile("nop");
     }
 }
+
 
 void uart_init()
 {

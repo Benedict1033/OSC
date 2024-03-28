@@ -8,6 +8,6 @@ unsigned long hex2dec(char *s);
 void align(void *size, size_t s); 
 size_t utils_strlen(const char *s);
 uint32_t get_le2be_uint(const void *p);
-void send_sapce(int n);
 void uart_hex(unsigned int d);
 uint32_t align_up(uint32_t size, int alignment);
+void send_space(int count);

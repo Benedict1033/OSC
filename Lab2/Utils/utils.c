@@ -82,8 +82,10 @@ uint32_t get_le2be_uint(const void *p)
     return res;
 }
 
-void send_sapce(int n) {
-  while (n--) uart_send_string(" ");
+void send_space(int count) {
+    for (int i = 0; i < count; i++) {
+        uart_send(' ');
+    }
 }
 
 size_t utils_strlen(const char *s) {

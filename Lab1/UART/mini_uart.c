@@ -36,6 +36,14 @@ void uart_init()
     *AUX_MU_CNTL_REG = 3; // Finally, enable transmitter and receiver
 }
 
+char uart_recv()
+{
+    while (!(*(AUX_MU_LSR_REG)&0x01)){}
+
+    char temp = *(AUX_MU_IO_REG);
+    return temp == '\r' ? '\n' : temp;
+}
+
 void uart_send(const char c)
 {
     if (c == '\n')
@@ -46,13 +54,6 @@ void uart_send(const char c)
     *AUX_MU_IO_REG = c;
 }
 
-char uart_recv()
-{
-    while (!(*(AUX_MU_LSR_REG)&0x01)){}
-
-    char temp = *(AUX_MU_IO_REG)&0xFF;
-    return temp == '\r' ? '\n' : temp;
-}
 
 void uart_send_string(const char *str)
 {

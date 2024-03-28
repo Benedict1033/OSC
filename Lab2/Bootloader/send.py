@@ -40,7 +40,7 @@ def send_img(ser, kernel):
             if not chunk:
                 break
             ser.write(chunk)
-            time.sleep(0.01)  # Adjust this to match your device's buffering and processing capabilities
+            time.sleep(0.001)  # Adjust this to match your device's buffering and processing capabilities
             sent += len(chunk)
             elapsed_time = time.time() - start_time  # Calculate elapsed time
             print_progress_bar(sent, kernel_size, elapsed_time, prefix='Progress:', suffix='Complete', length=50)
