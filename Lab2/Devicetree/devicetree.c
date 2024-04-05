@@ -41,6 +41,8 @@ int parse_struct(fdt_callback cb, uintptr_t cur_ptr, uintptr_t strings_ptr, uint
                 return -1;
         }
     }
+
+     return -1;
 }
 
 void print_string(const char* data, uint32_t size) {
@@ -113,6 +115,7 @@ void print_dtb(int type, const char* name, const void* data, uint32_t size) {
 
 void get_initramfs_addr(int type, const char *name, const void *data, uint32_t size)
 {
+    (void)size;
     if(type==FDT_PROP&&!utils_str_compare(name,"linux,initrd-start")){
         cpio_addr=(char *)(uintptr_t)get_le2be_uint(data);
         uart_send_string("initramfs_addr at ");
@@ -138,4 +141,6 @@ int fdt_traverse(fdt_callback cb, void* _dtb)
     uintptr_t struct_ptr = dtb_ptr + get_le2be_uint(&(header->off_dt_struct));
     uintptr_t strings_ptr = dtb_ptr + get_le2be_uint(&(header->off_dt_strings));
     parse_struct(cb, struct_ptr, strings_ptr, totalsize);
+
+     return 0;
 }

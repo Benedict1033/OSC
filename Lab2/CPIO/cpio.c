@@ -2,8 +2,6 @@
 #include "../header/mini_uart.h"
 #include "../header/utils.h"
 
-
-
 void cpio_ls()
 {
     char *addr = cpio_addr;

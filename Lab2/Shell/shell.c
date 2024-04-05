@@ -1,11 +1,9 @@
 #include "header/shell.h"
 #include "../header/utils.h"
 #include "../header/mini_uart.h"
-#include "../header/mailbox.h"
 #include "../header/cpio.h"
 #include "../header/allocator.h"
 #include "../header/devicetree.h"
-#include "../header/reboot.h"
 #include <stddef.h>
 
 #define BUFFER_MAX_SIZE 256
@@ -34,30 +32,10 @@ void read_command(char *buffer)
 void help()
 {
     uart_send_string("help    : print this help menu\n");
-    uart_send_string("hello   : print Hello World!\n");
-    uart_send_string("reboot  : reboot the device\n");
-    uart_send_string("info    : the mailbox hardware info\n");
     uart_send_string("ls      : list the all file\n");
     uart_send_string("cat     : print the file content\n");
     uart_send_string("malloc  : a simple memory allocator\n");
     uart_send_string("dtb     : print the device name tree \n");
-}
-
-void reboot()
-{
-    uart_send_string("rebooting...\r\n");
-    reset(1000);
-}
-
-void hello()
-{
-    uart_send_string("Hello World!\r\n");
-}
-
-void info()
-{
-    get_board_revision();
-    get_arm_memory();
 }
 
 void parse_command(char *buffer)
@@ -66,12 +44,6 @@ void parse_command(char *buffer)
         return;
     else if (utils_str_compare(buffer, "help") == 0)
         help();
-    else if (utils_str_compare(buffer, "hello") == 0)
-        hello();
-    else if (utils_str_compare(buffer, "reboot") == 0)
-        reboot();
-    else if (utils_str_compare(buffer, "info") == 0)
-        info();
     else if (utils_str_compare(buffer, "ls") == 0)
         cpio_ls();
     else if (utils_str_compare(buffer, "cat") == 0)
@@ -83,6 +55,8 @@ void parse_command(char *buffer)
     }
     else if (utils_str_compare(buffer, "malloc") == 0)
     {
+        uart_send_string("Allocating Hello World!");
+
         char *a = malloc(sizeof("Hello"));
         char *b = malloc(sizeof("World!"));
 

@@ -2,13 +2,13 @@ CC := aarch64-linux-gnu-gcc
 LD := aarch64-linux-gnu-ld
 OBJCOPY := aarch64-linux-gnu-objcopy
 CFLAGS := -Wall -Wextra -O2 -ffreestanding -nostdinc -nostdlib -nostartfiles
-CFLAGS += -IMain -IUART/header -IShell/header -IMailbox/header -IUtils/header -IReboot/header -ICPIO/header -IDevicetree/header -IAllocator/header
+CFLAGS += -IMain -IUART/header -IShell/header -IMailbox/header -IUtils/header -IReboot/header -ICPIO/header -IDevicetree/header -IAllocator/header -IPrintf/header
 CFLAGS += -I/usr/lib/gcc-cross/aarch64-linux-gnu/11/include
 
 K8 := kernel8
 KERNEL_LINKER := Main/linker.ld
 KERNEL_SRC_S := $(wildcard Main/*.s)
-KERNEL_SRC_C := $(wildcard Main/*.c UART/*.c Shell/*.c Mailbox/*.c Reboot/*.c Utils/*.c CPIO/*.c Devicetree/*.c Allocator/*.c)
+KERNEL_SRC_C := $(wildcard Main/*.c UART/*.c Shell/*.c Mailbox/*.c Reboot/*.c Utils/*.c CPIO/*.c Devicetree/*.c Allocator/*.c Printf/*.c)
 KERNEL_OBJS := $(KERNEL_SRC_C:.c=.o) $(KERNEL_SRC_S:.s=.o) Main/main.o
 
 BL := bootloader

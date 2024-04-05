@@ -11,3 +11,5 @@ uint32_t get_le2be_uint(const void *p);
 void uart_hex(unsigned int d);
 uint32_t align_up(uint32_t size, int alignment);
 void send_space(int count);
+void utils_int2str_dec(int num, char *str);
+uint32_t get_be32(const uint8_t *p) ;

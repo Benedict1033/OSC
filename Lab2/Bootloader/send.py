@@ -1,54 +1,32 @@
-#! /usr/bin/python3
-
-import os
-import sys
-import time
 import serial
+import os
+import time
+from tqdm import tqdm
 
-BAUD_RATE = 115200
+def send_file(serial_port, file_path, baud_rate=115200, timeout=0.5, sleep_time=0.001):
 
-def print_progress_bar(iteration, total, elapsed_time, prefix='', suffix='', decimals=1, length=50, fill='█'):
-    """
-    Call in a loop to create terminal progress bar with elapsed time
-    @params:
-        iteration     - Required  : current iteration (Int)
-        total         - Required  : total iterations (Int)
-        elapsed_time  - Required  : time since start (Float)
-        prefix        - Optional  : prefix string (Str)
-        suffix        - Optional  : suffix string (Str)
-        decimals      - Optional  : positive number of decimals in percent complete (Int)
-        length        - Optional  : character length of bar (Int)
-        fill          - Optional  : bar fill character (Str)
-    """
-    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-    filled_length = int(length * iteration // total)
-    bar = fill * filled_length + '-' * (length - filled_length)
-    sys.stdout.write(f'\r{prefix} |{bar}| {percent}% {suffix} Time: {elapsed_time:.2f}s')
-    sys.stdout.flush()
+    tty = serial.Serial(serial_port, baud_rate, timeout=timeout)
+    
+    file_size = os.path.getsize(file_path)
 
-def send_img(ser, kernel):
-    print("Please sent the kernel image size:")
-    kernel_size = os.stat(kernel).st_size
-    ser.write((str(kernel_size) + "\n").encode())
-    print("Start to load the kernel image...")
+    tty.write(str(file_size).encode('utf-8'))
+    tty.write("\n".encode('utf-8'))
+    time.sleep(sleep_time)
 
-    start_time = time.time()  # Record the start time
-    sent = 0  # keep track of bytes sent
-    with open(kernel, "rb") as image:
-        while True:
-            chunk = image.read(1)
-            if not chunk:
-                break
-            ser.write(chunk)
-            time.sleep(0.001)  # Adjust this to match your device's buffering and processing capabilities
-            sent += len(chunk)
-            elapsed_time = time.time() - start_time  # Calculate elapsed time
-            print_progress_bar(sent, kernel_size, elapsed_time, prefix='Progress:', suffix='Complete', length=50)
+    pbar = tqdm(total=file_size, unit="B", unit_scale=True, desc="Sending")
 
-    print("\nKernel image sent successfully.")
+    start_time = time.time()
+    
+    with open(file_path, "rb") as fp:
+        for byte in iter(lambda: fp.read(1), b''):
+            tty.write(byte)
+            pbar.update(len(byte))
+            time.sleep(sleep_time)
 
-if __name__ == "__main__":
-    ser = serial.Serial("/dev/ttyUSB0", BAUD_RATE, timeout=500)
-    #ser = serial.Serial("/dev/pts/1", BAUD_RATE, timeout=500)
-    send_img(ser, "./kernel8.img")
+    pbar.close()
 
+    total_time = time.time() - start_time
+
+    print(f"Transfer completed in {total_time:.2f} seconds. Speed: {file_size / total_time:.2f} Bytes/s")
+
+send_file("/dev/ttyUSB0", "kernel8.img")
