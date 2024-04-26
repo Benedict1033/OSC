@@ -127,9 +127,7 @@ void align(void *size, size_t s) // aligned to 4 byte
 */
     unsigned long *x = (unsigned long *)size;
     if ((*x) & (s-1))
-    {
         (*x) += s - ((*x) & (s-1));
-    }
 }
 
 uint32_t align_up(uint32_t size, int alignment) {

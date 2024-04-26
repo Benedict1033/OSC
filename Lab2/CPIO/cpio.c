@@ -9,9 +9,10 @@ void cpio_ls()
     while (utils_str_compare((char *)(addr + sizeof(cpio_header)), "TRAILER!!!") != 0)
     {
         cpio_header *header = (cpio_header *)addr;
-        unsigned long pathname_size = hex2dec(header->c_namesize);
-        unsigned long file_size = hex2dec(header->c_filesize);
-        unsigned long headerPathname_size = sizeof(cpio_header) + pathname_size;
+        unsigned long pathname_size = hex2dec(header->c_namesize); //path_size
+        unsigned long file_size = hex2dec(header->c_filesize); //file_size
+
+        unsigned long headerPathname_size = sizeof(cpio_header) + pathname_size; //total_size
 
         align(&headerPathname_size,4); 
         align(&file_size,4);           
@@ -40,8 +41,6 @@ char *findFile(char *name)
         align(&file_size,4);           
         addr += (headerPathname_size + file_size);
     }
-
-    return 0;
 }
 
 void cpio_cat(char *filename)
@@ -59,10 +58,8 @@ void cpio_cat(char *filename)
         align(&file_size,4);           
 
         char *file_content = target + headerPathname_size;
-        for (unsigned int i = 0; i < file_size; i++)
-        {
-            uart_send(file_content[i]); // print the file content
-        }
+
+        uart_send_string(file_content);
         uart_send_string("\n");
     }
     else

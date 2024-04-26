@@ -55,21 +55,17 @@ void parse_command(char *buffer)
     }
     else if (utils_str_compare(buffer, "malloc") == 0)
     {
-        uart_send_string("Allocating Hello World!");
-
         char *a = malloc(sizeof("Hello"));
-        char *b = malloc(sizeof("World!"));
+
+        uart_send_string(a); //uninitialize
 
         a[0] = 'H', a[1] = 'e', a[2] = 'l', a[3] = 'l', a[4] = 'o', a[5] = '\0';
-        b[0] = 'W', b[1] = 'o', b[2] = 'r', b[3] = 'l', b[4] = 'd'; b[5] = '!', b[6] = '\0';
 
         uart_send_string(a);
-        uart_send(' ');
-        uart_send_string(b);
-        uart_send('\n');
+        uart_send_string(" \r\n");
     }
-    else if (utils_str_compare(buffer, "dtb") == 0)
-        fdt_traverse(print_dtb,_dtb_ptr);
+    // else if (utils_str_compare(buffer, "dtb") == 0)
+    //     fdt_traverse(print_dtb,_dtb_ptr);
     else
         uart_send_string("commnad not found\r\n");
 }

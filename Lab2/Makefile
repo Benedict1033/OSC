@@ -41,7 +41,7 @@ qemu:
 	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -display none  -initrd Other/Archive/initramfs.cpio -dtb Other/Archive/bcm2710-rpi-3-b-plus.dtb -kernel $(K8).img
 
 bl:
-	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -serial pty -display none -kernel $(BL).img
+	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -serial pty -display none -kernel $(BL).img -S -s
 
 rpi3:
 	screen /dev/ttyUSB0 115200

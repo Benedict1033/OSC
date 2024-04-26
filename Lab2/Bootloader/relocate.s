@@ -2,10 +2,9 @@
 .globl _start_relocate
 
 _start_relocate:
-    adr x10, .               
+    adr x10, .    
     ldr x12, =text_begin  
     adr x13, bss_end
-    sub x11, x13, x12
 
 moving_relocate:
     cmp x10, x13            
@@ -17,3 +16,4 @@ moving_relocate:
 end_relocate:
     ldr x14, =boot_entry    
     br x14
+

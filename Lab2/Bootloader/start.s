@@ -18,7 +18,7 @@ master:
     sub    x21, x21, x20
     bl     memzero
 
-    mov    sp, #0x3F000000
+    mov   sp, #0x3F000000
     bl    bootloader_main
 
 memzero:

@@ -4,6 +4,7 @@
 _start:
     ldr    x1, =_dtb_ptr
     str    x0, [x1]   
+    
     mrs    x20, mpidr_el1        
     and    x20, x20,#0xFF        // Check processor id
     cbz    x20, master        // Hang for all non-primary CPU
