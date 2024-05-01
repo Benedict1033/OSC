@@ -3,7 +3,7 @@ import os
 import time
 from tqdm import tqdm
 
-def send_file(serial_port, file_path, baud_rate=115200, timeout=0.5, sleep_time=0.001):
+def send_file(serial_port, file_path, baud_rate=115200, timeout=0.5, sleep_time=0.01):
 
     tty = serial.Serial(serial_port, baud_rate, timeout=timeout)
     
@@ -18,7 +18,7 @@ def send_file(serial_port, file_path, baud_rate=115200, timeout=0.5, sleep_time=
     start_time = time.time()
     
     with open(file_path, "rb") as fp:
-        for byte in iter(lambda: fp.read(1), b''):
+        for byte in iter(lambda: fp.read(4), b''):
             tty.write(byte)
             pbar.update(len(byte))
             time.sleep(sleep_time)

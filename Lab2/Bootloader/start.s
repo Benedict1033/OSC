@@ -2,8 +2,8 @@
 .globl _start_boot
 
 _start_boot:
-    ldr x20, =_dtb
-    str x0, [x20]
+    ldr x19, =_dtb
+    str x0, [x19]
     
     mrs    x20, mpidr_el1        
     and    x20, x20,#0xFF 

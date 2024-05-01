@@ -35,7 +35,7 @@ void help()
     uart_send_string("ls      : list the all file\n");
     uart_send_string("cat     : print the file content\n");
     uart_send_string("malloc  : a simple memory allocator\n");
-    uart_send_string("dtb     : print the device name tree \n");
+    uart_send_string("dtb     : get the address of initramfs \n");
 }
 
 void parse_command(char *buffer)
@@ -56,16 +56,13 @@ void parse_command(char *buffer)
     else if (utils_str_compare(buffer, "malloc") == 0)
     {
         char *a = malloc(sizeof("Hello"));
-
-        uart_send_string(a); //uninitialize
-
-        a[0] = 'H', a[1] = 'e', a[2] = 'l', a[3] = 'l', a[4] = 'o', a[5] = '\0';
-
+        
+        a[0] = 'H', a[1] = 'e', a[2] = 'l', a[3] = 'l', a[4] = 'o' ,a[5] = '\0';
         uart_send_string(a);
-        uart_send_string(" \r\n");
+        uart_send('\n');
     }
-    // else if (utils_str_compare(buffer, "dtb") == 0)
-    //     fdt_traverse(print_dtb,_dtb_ptr);
+    else if (utils_str_compare(buffer, "dtb") == 0)
+        fdt_traverse(get_initramfs_addr,_dtb_ptr);
     else
         uart_send_string("commnad not found\r\n");
 }

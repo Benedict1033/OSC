@@ -23,7 +23,9 @@ void load_img()
     }
 
     buffer[index + 1] = '\0';
-    // utils_newline2end(buffer);
+    utils_newline2end(buffer);
+    uart_send('\r');
+    
     unsigned int img_size = utils_str2uint_dec(buffer);
 
     char *current = kernel_addr;
@@ -31,9 +33,10 @@ void load_img()
     {
         *current = uart_recv_raw();
         current++;
+        uart_send('.');
     }
     
-    ((void (*)(char *))kernel_addr)(_dtb);
+    ((void (*)(char *))kernel_addr)(_dtb); //控制权传递给内核
 }
 
 void bootloader_main(void)
