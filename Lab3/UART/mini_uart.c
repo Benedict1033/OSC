@@ -1,6 +1,7 @@
 #include "header/mini_uart.h"
 #include "../header/utils.h"
 
+
 void delay(unsigned int clock)
 {
     while (clock--)

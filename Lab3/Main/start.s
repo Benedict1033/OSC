@@ -4,6 +4,7 @@
 _start:
     ldr    x1, =_dtb_ptr
     str    x0, [x1]   
+    
     mrs    x20, mpidr_el1        
     and    x20, x20,#0xFF        // Check processor id
     cbz    x20, master        // Hang for all non-primary CPU
@@ -17,7 +18,15 @@ master:
     sub    x21, x21, x20
     bl     memzero
 
-    mov    sp, #0x3F000000
+    //bl     set_exception_vector_table
+
+    bl     from_el2_to_el1
+
+set_exception_vector_table:
+    adr x0, exception_vector_table
+    msr vbar_el1, x0
+
+    mov    sp, #0x400000
     bl    kernel_main
     
 memzero:

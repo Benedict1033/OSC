@@ -2,13 +2,13 @@ CC := aarch64-linux-gnu-gcc
 LD := aarch64-linux-gnu-ld
 OBJCOPY := aarch64-linux-gnu-objcopy
 CFLAGS := -Wall -Wextra -O2 -ffreestanding -nostdinc -nostdlib -nostartfiles
-CFLAGS += -IMain -IUART/header -IShell/header -IMailbox/header -IUtils/header -IReboot/header -ICPIO/header -IDevicetree/header -IAllocator/header -IPrintf/header
+CFLAGS += -IMain -IUART/header -IShell/header -IUtils/header -ICPIO/header -IDevicetree/header -IAllocator/header
 CFLAGS += -I/usr/lib/gcc-cross/aarch64-linux-gnu/11/include
 
 K8 := kernel8
 KERNEL_LINKER := Main/linker.ld
-KERNEL_SRC_S := $(wildcard Main/*.s)
-KERNEL_SRC_C := $(wildcard Main/*.c UART/*.c Shell/*.c Mailbox/*.c Reboot/*.c Utils/*.c CPIO/*.c Devicetree/*.c Allocator/*.c Printf/*.c)
+KERNEL_SRC_S := $(wildcard Main/*.s )
+KERNEL_SRC_C := $(wildcard Main/*.c UART/*.c Shell/*.c Utils/*.c CPIO/*.c Devicetree/*.c Allocator/*.c  Execption/*.c )
 KERNEL_OBJS := $(KERNEL_SRC_C:.c=.o) $(KERNEL_SRC_S:.s=.o) Main/main.o
 
 BL := bootloader
@@ -41,7 +41,7 @@ qemu:
 	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -display none  -initrd Other/Archive/initramfs.cpio -dtb Other/Archive/bcm2710-rpi-3-b-plus.dtb -kernel $(K8).img
 
 bl:
-	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -serial pty -display none -kernel $(BL).img
+	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -serial pty -display none -kernel $(BL).img -S -s
 
 rpi3:
 	screen /dev/ttyUSB0 115200

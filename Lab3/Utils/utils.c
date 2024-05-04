@@ -31,6 +31,31 @@ void utils_newline2end(char *str)
     }
 }
 
+
+
+void utils_int2str_dec(int num, char *str)
+{
+    // num=7114 digit=4
+    int digit = -1, temp = num;
+    while (temp > 0)
+    {
+        temp /= 10;
+        digit++;
+    }
+    for (int i = digit; i >= 0; i--)
+    {
+        int t = 1;
+        for (int j = 0; j < i; j++)
+        {
+            t *= 10;
+        }
+        *str = '0' + num / t;
+        num = num % t;
+        str++;
+    }
+    *str = '\0';
+}
+
 unsigned int utils_str2uint_dec(const char *str)
 {
     unsigned int value = 0u;
@@ -57,19 +82,19 @@ unsigned long hex2dec(char *s)
     return r;
 }
 
-void uart_hex(unsigned int d)
-{
-    unsigned int n;
-    int c;
+// Transfer little endian to big endian
+uint32_t get_be32(const uint8_t *p) {
+    return (uint32_t)p[0] << 24 | (uint32_t)p[1] << 16 | (uint32_t)p[2] << 8 | p[3];
+}
+
+void uart_hex(uint32_t d) {
     uart_send_string("0x");
-    for (c = 28; c >= 0; c -= 4)
-    {
-        n = (d >> c) & 0xF;
-        n += n > 9 ? 0x57 : 0x30;
+    for (int c = 28; c >= 0; c -= 4) {
+        int n = (d >> c) & 0xF;
+        n += n > 9 ? 'A' - 10 : '0';
         uart_send(n);
     }
 }
-
 
 uint32_t get_le2be_uint(const void *p)
 {
@@ -82,8 +107,10 @@ uint32_t get_le2be_uint(const void *p)
     return res;
 }
 
-void send_sapce(int n) {
-  while (n--) uart_send_string(" ");
+void send_space(int count) {
+    for (int i = 0; i < count; i++) {
+        uart_send(' ');
+    }
 }
 
 size_t utils_strlen(const char *s) {
@@ -100,9 +127,7 @@ void align(void *size, size_t s) // aligned to 4 byte
 */
     unsigned long *x = (unsigned long *)size;
     if ((*x) & (s-1))
-    {
         (*x) += s - ((*x) & (s-1));
-    }
 }
 
 uint32_t align_up(uint32_t size, int alignment) {
